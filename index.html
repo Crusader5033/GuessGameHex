@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <title>Color game</title>
+</head>
+
+<body>
+    <header>
+
+        <h1>Color guessing game</h1>
+    </header>
+    <main>
+
+
+        <p id="colorToGuess"></p>
+        <p id="result"></p>
+
+
+
+        <ul id="colors">
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+            <li class="color"></li>
+        </ul>
+
+        <div>
+            <button class="difficulty">Easy</button>
+            <button class="difficulty">Medium</button>
+            <button class="difficulty">Hard</button>
+        </div>
+
+
+        <button id="reset">Reset</button>
+
+
+
+    </main>
+
+    <script>
+
+        var colors = [];
+        var rightColor;
+        var numberOfColors ;
+        var resetButton = document.querySelector("#reset");
+        var diffucultyButtons = document.querySelectorAll(".difficulty");
+        var rightColorDisplay = document.getElementById("colorToGuess");
+        var dots = document.querySelectorAll(".color");
+        var resultMessage = document.getElementById("result");
+        numberOfColors=3;
+
+
+        
+
+        startOfGame();
+
+
+
+        function reset() {
+            showRightColor();
+            console.log(colors);
+            resultMessage.textContent = "Take a guess";
+            assignColor();
+
+        }
+
+        function generateRandomColors(numberOfColors) {
+            var array = [];
+            for (var i = 0; i < numberOfColors; i++) {
+
+                var rndColor = Math.floor(Math.random() * 16777215).toString(16);
+                array.push(rndColor);
+            }
+            console.log(array);
+            return array;
+        }
+
+        function showRightColor() {
+            colors = generateRandomColors(numberOfColors);
+            var rnd = Math.floor(Math.random() * colors.length);
+            rightColor = colors[rnd];
+            rightColorDisplay.textContent = "#" + rightColor;
+            console.log(rightColor);
+            console.log(colors);
+
+        }
+
+
+
+        function startOfGame() {
+            buttonsConfig();
+            reset();
+            prepareDots();
+
+
+
+
+        }
+
+        function assignColor() {
+
+            for (var i = 0; i < dots.length; i++) {
+                if (colors[i]) {
+                    dots[i].style.display = "block";
+                    dots[i].style.backgroundColor = "#" + colors[i];
+                } else {
+                    dots[i].style.display = "none";
+                }
+            }
+
+        }
+
+
+
+
+
+        function buttonsConfig() {
+            for (var i = 0; i < diffucultyButtons.length; i++) {
+                diffucultyButtons[i].addEventListener("click", function () {
+                    if (this.textContent === "Easy") {
+                        numberOfColors = 3;
+                    } else if (this.textContent === "Medium") {
+                        numberOfColors = 6;
+                    } else {
+                        numberOfColors = 9;
+                    }
+                    reset();
+                });
+            }
+            resetButton.addEventListener("click", function () {
+                reset();
+            });
+
+        }
+
+        function prepareDots() {
+            for (var i = 0; i < dots.length; i++) {
+                dots[i].addEventListener("click", function () {
+
+
+
+
+
+                    var clickedColor = this.style.backgroundColor;
+
+
+
+
+                    colorsOnly = clickedColor.substring(
+
+                        clickedColor.indexOf('(') + 1, clickedColor.lastIndexOf(')')).split(/,\s*/),
+
+                        red = parseInt(colorsOnly[0]),
+                        green = parseInt(colorsOnly[1]),
+                        blue = parseInt(colorsOnly[2]);
+
+
+
+
+                    console.log(ConvertRGBtoHex(red, green, blue));
+                    console.log("#" + rightColor);
+
+                    if (ConvertRGBtoHex(red, green, blue) !== "#" + rightColor) {
+
+                        resultMessage.textContent = "What a shame,you are wrong";
+                        this.style.display = "none";
+                    } else {
+                        resultMessage.textContent = "Right answer!";
+                    }
+                });
+            }
+        }
+
+        function ColorToHex(color) {
+            var hexadecimal = color.toString(16);
+            return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+        }
+
+
+        function ConvertRGBtoHex(red, green, blue) {
+            return "#" + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
+        }
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
